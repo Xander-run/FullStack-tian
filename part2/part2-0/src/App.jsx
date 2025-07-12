@@ -54,10 +54,7 @@ const App = () => {
       {
         courses.map(course => {
           return (
-            <div>
-              <Course name={course.name} parts={course.parts}></Course>
-              <Total total={course.parts.reduce((sum, part) => sum + part.exercises, 0)}/>
-            </div>
+            <Course key={course.id} name={course.name} parts={course.parts}></Course>
           )
         })
       }
