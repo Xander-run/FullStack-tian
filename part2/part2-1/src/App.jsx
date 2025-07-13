@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './componenets/Filter'
 import Persons from './componenets/Persons'
 import PersonForm from './componenets/PersonForm'
+import Notification from './componenets/Notification'
 import PersonService from './services/Persons'
 
 const App = () => {
@@ -13,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameQuery, setNameQuery] = useState('')
+  const [notificationType, setNotificationType] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
   // handler
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -42,8 +45,18 @@ const App = () => {
             setPersons(persons.map(person =>
               person.id !== existingPerson.id ? person : returnedPerson
             ));
+            setNotificationMessage(
+              `Updated ${updatedPerson.name}`
+            )
+            setNotificationType("normal")
             setNewName("");
             setNewNumber("");
+          })
+          .catch(() => {
+            setNotificationMessage(
+              `Information of ${updatedPerson.name} was already removed from server`
+            )
+            setNotificationType("error")
           })
       }
       return;
@@ -52,13 +65,22 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-    PersonService.create(newPerson).then(
-      data => {
-        setPersons(persons.concat(data))
-          setNewName("")
-          setNewNumber("")
-      }
-    )
+    PersonService.create(newPerson)
+                  .then(
+                    data => {
+                      setPersons(persons.concat(data))
+                        setNewName("")
+                        setNewNumber("")
+                    }
+                  )
+                  .then(
+                    () => {
+                      setNotificationMessage(
+                        `Added ${newPerson.name}`
+                      )
+                      setNotificationType("noramal")
+                    }
+                  )
   }
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
@@ -66,13 +88,20 @@ const App = () => {
         .deletePerson(person.id).then(returnedPerson => {
           setPersons(persons.filter(p => p.id != returnedPerson.id))
         })
+        .catch(() => {
+            setNotificationMessage(
+              `Information of ${person.name} was already removed from server`
+            )
+            setNotificationType("error")
+        })
     }
   }
   // implementation
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter nameQuery={nameQuery} onChange={handleNameQueryChange}></Filter>
+      <Notification type={notificationType} message={notificationMessage} />
+      <Filter nameQuery={nameQuery} onChange={handleNameQueryChange} />
       <h2>add a new</h2>
       <PersonForm
         handleNewPerson={handleNewPerson}
@@ -80,13 +109,13 @@ const App = () => {
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
-      ></PersonForm>
+      />
       <h2>Numbers</h2>
       <Persons
         persons={persons}
         nameQeury={nameQuery}
         deletePerson={deletePerson}  
-      ></Persons>
+      />
     </div>
   )
 }

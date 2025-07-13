@@ -11,19 +11,14 @@
       "number": "8888888"
     },
     {
-      "id": "f6ba",
-      "name": "Michael Ehrmantraut",
-      "number": "000333"
-    },
-    {
-      "id": "a0f3",
-      "name": "Skyler White",
-      "number": "000444"
-    },
-    {
       "id": "a13b",
       "name": "James McgGill",
       "number": "000666"
+    },
+    {
+      "id": "eb63",
+      "name": "Gustavo Fring",
+      "number": "777777"
     }
   ]
 }
