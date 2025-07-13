@@ -4,7 +4,11 @@ const Persons = (props) => {
       <ul>
         {
           props.persons.map(
-            person => <li key={person.id}>{person.name} {person.number}</li>
+            person => 
+              <li key={person.id}>
+                {person.name} {person.number}
+                <button onClick={() => props.deletePerson(person)}>delete</button>
+              </li>
           )
         }
       </ul>
@@ -16,7 +20,11 @@ const Persons = (props) => {
           props.persons.filter(
             person => person.name.includes(props.nameQeury)
           ).map(
-            person => <li key={person.id}>{person.name} {person.number}</li>
+            person =>
+              <li key={person.id}>
+                {person.name} {person.number}
+                <button onClick={() => props.deletePerson(person)}>delete</button>
+              </li>
           )
         }
       </ul>
